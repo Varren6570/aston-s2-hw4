@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Сервисный слой для работы с пользователями.
  * <p>
  * Реализует CRUD-операции через UserRepository.
- * Раелизованы методы для маппинга между User и UserDto.
+ * Реализованы методы для маппинга между User и UserDto.
  *
  */
 @Service
@@ -47,12 +47,11 @@ public class UserServiceImpl implements UserService {
         userResponse.setAge(newUser.getAge());
         return userResponse;
     }
-
+    /**
+     * Возвращает DTO пользователя по ID.
+     * Бросает UserNotFoundException, если пользователь не найден.
+     */
     @Override
-/**
- * Возвращает DTO пользователя по ID.
- * Бросает UserNotFoundException, если пользователь не найден.
- */
     public UserDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         return mapToDto(user);
@@ -68,9 +67,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
     /**
-     * Обновляет существующего пользователя по ID
-     * Обновляет те поля, что есть в json'e
-     * Бросает UserNotFoundException, если пользователь не найден
+     * Обновляет существующего пользователя по ID.
+     * Обновляет те поля, что есть в json'e.
+     * Бросает UserNotFoundException, если пользователь не найден.
      */
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
@@ -90,8 +89,8 @@ public class UserServiceImpl implements UserService {
 
     }
     /**
-     * Удаляет пользователя по ID
-     * Бросает UserNotFoundException, если пользователь не найден
+     * Удаляет пользователя по ID.
+     * Бросает UserNotFoundException, если пользователь не найден.
      */
     @Override
     public void deleteUser(Long id) {
@@ -99,7 +98,7 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
     /**
-     * Маппинг User в UserDto
+     * Маппинг User в UserDto.
      */
     private UserDto mapToDto(User user) {
         if (user == null) {
@@ -116,7 +115,7 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
     /**
-     * Маппинг UserDto в User(не понадобился)
+     * Маппинг UserDto в User(не понадобился).
      */
     private User mapToUser(UserDto userDto) {
         if (userDto == null) {
