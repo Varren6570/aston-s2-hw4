@@ -2,9 +2,13 @@ package aston_s2_hw4.service;
 
 import aston_s2_hw4.dto.UserDto;
 import aston_s2_hw4.exceptions.UserNotFoundException;
+import aston_s2_hw4.kafka.KafkaSender;
 import aston_s2_hw4.model.User;
 import aston_s2_hw4.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,13 +26,15 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    KafkaSender sender;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, KafkaSender sender) {
         this.userRepository = userRepository;
+        this.sender = sender;
     }
     /**
-     * Создаёт нового пользователя и возвращает его DTO.
+     * Создаёт нового пользователя и возвращает его DTO, а также отправляет сообщение о создании по электронной почте.
      */
     @Override
     public UserDto addUser(UserDto userDto) {
@@ -39,6 +45,15 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDateTime.now());
 
         User newUser = userRepository.save(user);
+
+        Message<String> message = MessageBuilder
+                .withPayload(newUser.getEmail())
+                .setHeader(KafkaHeaders.TOPIC, "notification-topic")
+                .setHeader(KafkaHeaders.KEY, newUser.getEmail())
+                .setHeader("eventType", "CREATE")
+                .build();
+
+        sender.sendMessage(message);
 
         UserDto userResponse = new UserDto();
         userResponse.setId(newUser.getId());
@@ -90,12 +105,21 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * Удаляет пользователя по ID.
-     * Бросает UserNotFoundException, если пользователь не найден.
+     * Бросает UserNotFoundException, если пользователь не найден, а также отправляет сообщение о создании по электронной почте.
      */
     @Override
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         userRepository.delete(user);
+
+        Message<String> message = MessageBuilder
+                .withPayload(user.getEmail())
+                .setHeader(KafkaHeaders.TOPIC, "notification-topic")
+                .setHeader(KafkaHeaders.KEY, user.getEmail())
+                .setHeader("eventType", "DELETE")
+                .build();
+
+        sender.sendMessage(message);
     }
     /**
      * Маппинг User в UserDto.

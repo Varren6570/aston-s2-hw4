@@ -1,0 +1,4 @@
+# src/test/resources/application-test.yml
+spring:
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
