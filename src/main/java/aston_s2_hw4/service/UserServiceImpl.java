@@ -1,5 +1,6 @@
 package aston_s2_hw4.service;
 
+import aston_s2_hw4.dto.UserCreateRequest;
 import aston_s2_hw4.dto.UserDto;
 import aston_s2_hw4.exceptions.UserNotFoundException;
 import aston_s2_hw4.kafka.KafkaSender;
@@ -37,11 +38,11 @@ public class UserServiceImpl implements UserService {
      * Создаёт нового пользователя и возвращает его DTO, а также отправляет сообщение о создании по электронной почте.
      */
     @Override
-    public UserDto addUser(UserDto userDto) {
+    public UserDto addUser(UserCreateRequest userCreateRequest) {
         User user = new User();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setAge(userDto.getAge());
+        user.setName(userCreateRequest.getName());
+        user.setEmail(userCreateRequest.getEmail());
+        user.setAge(userCreateRequest.getAge());
         user.setCreatedAt(LocalDateTime.now());
 
         User newUser = userRepository.save(user);
@@ -87,17 +88,17 @@ public class UserServiceImpl implements UserService {
      * Бросает UserNotFoundException, если пользователь не найден.
      */
     @Override
-    public UserDto updateUser(Long id, UserDto userDto) {
+    public UserDto updateUser(Long id, UserCreateRequest userCreateRequest) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
 
-        if (userDto.getName() != null) {
-            user.setName(userDto.getName());
+        if (userCreateRequest.getName() != null) {
+            user.setName(userCreateRequest.getName());
         }
-        if (userDto.getEmail() != null) {
-            user.setEmail(userDto.getEmail());
+        if (userCreateRequest.getEmail() != null) {
+            user.setEmail(userCreateRequest.getEmail());
         }
-        if (userDto.getAge() != 0) {
-            user.setAge(userDto.getAge());
+        if (userCreateRequest.getAge() != 0) {
+            user.setAge(userCreateRequest.getAge());
         }
         User updatedUser = userRepository.save(user);
         return mapToDto(updatedUser);
