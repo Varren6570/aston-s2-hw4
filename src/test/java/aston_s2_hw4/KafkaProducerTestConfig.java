@@ -12,6 +12,7 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 
 import java.util.Map;
+
 /**
  * Конфигурация Kafka‑продюсера специально для тестов.
  */
@@ -22,6 +23,7 @@ public class KafkaProducerTestConfig {
      */
     @Autowired
     EmbeddedKafkaBroker broker;
+
     /**
      * Фабрика Kafka‑продюсеров с настройками по умолчанию. Свойства соединения предоставляются {@link EmbeddedKafkaBroker}
      *
@@ -38,6 +40,7 @@ public class KafkaProducerTestConfig {
                 StringSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
     }
+
     /**
      * KafkaTemplate для отправки сообщений в Kafka. Такой же как и в основной конфигурации.
      *

@@ -9,17 +9,17 @@ import java.util.Map;
 public class UserListResponseModel {
 
     @Schema(description = "Список пользователей с их ссылками")
-    private List<UserWithLinks> _embedded;
+    private List<UserResponseModel> _embedded;
 
     @Schema(description = "Ссылки на действия над коллекцией")
     private Map<String, LinkInfo> _links;
 
-    public UserListResponseModel(List<UserWithLinks> embedded, Map<String, LinkInfo> links) {
+    public UserListResponseModel(List<UserResponseModel> embedded, Map<String, LinkInfo> links) {
         this._embedded = embedded;
         this._links = links;
     }
 
-    public List<UserWithLinks> get_embedded() {
+    public List<UserResponseModel> get_embedded() {
         return _embedded;
     }
 

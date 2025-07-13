@@ -12,7 +12,8 @@ public class UserCreateRequest {
     @Schema(description = "Возраст", example = "27")
     private int age;
 
-    public UserCreateRequest() {}
+    public UserCreateRequest() {
+    }
 
     public UserCreateRequest(String name, String email, int age) {
         this.name = name;

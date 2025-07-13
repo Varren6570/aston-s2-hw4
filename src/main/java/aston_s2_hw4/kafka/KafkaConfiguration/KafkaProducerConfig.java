@@ -10,6 +10,7 @@ import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * Конфигурация Kafka‑продюсера.
  */
@@ -34,6 +35,7 @@ public class KafkaProducerConfig {
                 StringSerializer.class);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
+
     /**
      * KafkaTemplate для отправки сообщений в Kafka.
      *

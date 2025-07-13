@@ -4,9 +4,9 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
+
 /**
  * Конфигурация Kafka‑топиков приложения.
- *
  */
 @Configuration
 public class KafkaTopic {
@@ -16,7 +16,6 @@ public class KafkaTopic {
      * <p>Сейчас создаётся с настройками по умолчанию:
      * одна партиция, репликация = 1 и без дополнительных
      * конфигурационных параметров.</p>
-     *
      */
     @Bean
     public NewTopic topic1() {

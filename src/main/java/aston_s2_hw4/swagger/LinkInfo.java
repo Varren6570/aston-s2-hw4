@@ -4,10 +4,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Информация о гиперссылке HATEOAS")
 public class LinkInfo {
-    @Schema(description = "URL для действия", example = "http://localhost:8080/users/1")
+    @Schema(
+            description = "URL для действия",
+            example = "/users/1")
     private String href;
 
-    @Schema(description = "HTTP-метод", example = "GET")
+    @Schema(
+            description = "HTTP-метод",
+            example = "GET")
     private String type;
 
     public LinkInfo(String href, String type) {

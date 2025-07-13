@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
  * <p>
  * Реализует CRUD-операции через UserRepository.
  * Реализованы методы для маппинга между User и UserDto.
- *
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,6 +33,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.sender = sender;
     }
+
     /**
      * Создаёт нового пользователя и возвращает его DTO, а также отправляет сообщение о создании по электронной почте.
      */
@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
         userResponse.setAge(newUser.getAge());
         return userResponse;
     }
+
     /**
      * Возвращает DTO пользователя по ID.
      * Бросает UserNotFoundException, если пользователь не найден.
@@ -72,6 +73,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         return mapToDto(user);
     }
+
     /**
      * Возвращает список всех пользователей в виде DTO.
      */
@@ -82,6 +84,7 @@ public class UserServiceImpl implements UserService {
                 .map(u -> mapToDto(u))
                 .collect(Collectors.toList());
     }
+
     /**
      * Обновляет существующего пользователя по ID.
      * Обновляет те поля, что есть в json'e.
@@ -104,6 +107,7 @@ public class UserServiceImpl implements UserService {
         return mapToDto(updatedUser);
 
     }
+
     /**
      * Удаляет пользователя по ID.
      * Бросает UserNotFoundException, если пользователь не найден, а также отправляет сообщение о создании по электронной почте.
@@ -122,6 +126,7 @@ public class UserServiceImpl implements UserService {
 
         sender.sendMessage(message);
     }
+
     /**
      * Маппинг User в UserDto.
      */
@@ -139,6 +144,7 @@ public class UserServiceImpl implements UserService {
 
         return userDto;
     }
+
     /**
      * Маппинг UserDto в User(не понадобился).
      */

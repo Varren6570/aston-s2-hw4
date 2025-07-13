@@ -8,10 +8,17 @@ import java.util.Map;
 
 @Schema(description = "Пользователь с гиперссылками HATEOAS")
 public class UserResponseModel {
+
+    @Schema(description = "Данные пользователя")
     private UserDto user;
 
     @Schema(description = "HATEOAS ссылки")
     private Map<String, LinkInfo> _links;
+
+    public UserResponseModel(UserDto user, Map<String, LinkInfo> _links) {
+        this.user = user;
+        this._links = _links;
+    }
 
     public UserDto getUser() {
         return user;

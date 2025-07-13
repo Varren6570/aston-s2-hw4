@@ -59,79 +59,79 @@ public class UserController {
                     schema = @Schema(implementation = UserListResponseModel.class),
                     examples = @ExampleObject(
                             value = """
-            {
-              "_embedded": {
-                "userDtoList": [
-                  {
-                    "id": 1,
-                    "name": "nadddme",
-                    "email": "mailddddargaregfrer",
-                    "age": 13,
-                    "_links": {
-                      "self": {
-                        "href": "/users/1",
-                        "type": "GET"
-                      },
-                      "patch": {
-                        "href": "/user/1",
-                        "type": "PATCH"
-                      },
-                      "delete": {
-                        "href": "/users/1",
-                        "type": "DELETE"
-                      }
-                    }
-                  },
-                  {
-                    "id": 2,
-                    "name": "4",
-                    "email": "3",
-                    "age": 3,
-                    "_links": {
-                      "self": {
-                        "href": "/users/2",
-                        "type": "GET"
-                      },
-                      "patch": {
-                        "href": "/user/2",
-                        "type": "PATCH"
-                      },
-                      "delete": {
-                        "href": "/users/2",
-                        "type": "DELETE"
-                      }
-                    }
-                  },
-                  {
-                    "id": 6,
-                    "name": "aaaaa",
-                    "email": "aaaaa",
-                    "age": 12,
-                    "_links": {
-                      "self": {
-                        "href": "/users/6",
-                        "type": "GET"
-                      },
-                      "patch": {
-                        "href": "/user/6",
-                        "type": "PATCH"
-                      },
-                      "delete": {
-                        "href": "/users/6",
-                        "type": "DELETE"
-                      }
-                    }
-                  }
-                ]
-              },
-              "_links": {
-                "self": {
-                  "href": "/users/",
-                  "type": "GET"
-                }
-              }
-            }
-            """)))
+                                    {
+                                      "_embedded": {
+                                        "userDtoList": [
+                                          {
+                                            "id": 1,
+                                            "name": "nadddme",
+                                            "email": "mailddddargaregfrer",
+                                            "age": 13,
+                                            "_links": {
+                                              "self": {
+                                                "href": "/users/1",
+                                                "type": "GET"
+                                              },
+                                              "patch": {
+                                                "href": "/user/1",
+                                                "type": "PATCH"
+                                              },
+                                              "delete": {
+                                                "href": "/users/1",
+                                                "type": "DELETE"
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "id": 2,
+                                            "name": "4",
+                                            "email": "3",
+                                            "age": 3,
+                                            "_links": {
+                                              "self": {
+                                                "href": "/users/2",
+                                                "type": "GET"
+                                              },
+                                              "patch": {
+                                                "href": "/user/2",
+                                                "type": "PATCH"
+                                              },
+                                              "delete": {
+                                                "href": "/users/2",
+                                                "type": "DELETE"
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "id": 6,
+                                            "name": "aaaaa",
+                                            "email": "aaaaa",
+                                            "age": 12,
+                                            "_links": {
+                                              "self": {
+                                                "href": "/users/6",
+                                                "type": "GET"
+                                              },
+                                              "patch": {
+                                                "href": "/user/6",
+                                                "type": "PATCH"
+                                              },
+                                              "delete": {
+                                                "href": "/users/6",
+                                                "type": "DELETE"
+                                              }
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "_links": {
+                                        "self": {
+                                          "href": "/users/",
+                                          "type": "GET"
+                                        }
+                                      }
+                                    }
+                                    """)))
     @GetMapping("/users")
     public ResponseEntity<CollectionModel<EntityModel<UserDto>>> getAllUsers() {
 
@@ -160,27 +160,27 @@ public class UserController {
                     schema = @Schema(implementation = UserResponseModel.class),
                     examples = @ExampleObject(
                             value = """
-            {
-              "id": 1,
-              "name": "Евгений",
-              "email": "mail@mail.com",
-              "age": 27,
-              "_links": {
-                "self": {
-                  "href": "/users/12",
-                  "type": "GET"
-                },
-                "patch": {
-                  "href": "/user/12",
-                  "type": "PATCH"
-                },
-                "delete": {
-                  "href": "/users/12",
-                  "type": "DELETE"
-                }
-              }
-            }
-            """)))
+                                    {
+                                      "id": 1,
+                                      "name": "Евгений",
+                                      "email": "mail@mail.com",
+                                      "age": 27,
+                                      "_links": {
+                                        "self": {
+                                          "href": "/users/12",
+                                          "type": "GET"
+                                        },
+                                        "patch": {
+                                          "href": "/user/12",
+                                          "type": "PATCH"
+                                        },
+                                        "delete": {
+                                          "href": "/users/12",
+                                          "type": "DELETE"
+                                        }
+                                      }
+                                    }
+                                    """)))
     @PostMapping("/users")
     public ResponseEntity<EntityModel<UserDto>> addUser(
             @RequestBody
@@ -206,27 +206,27 @@ public class UserController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserResponseModel.class),
                     examples = @ExampleObject(value = """
-            {
-                 "id": 1,
-                 "name": "Евгений",
-                 "email": "mail@mail.com",
-                 "age": 13,
-                 "_links": {
-                     "self": {
-                         "href": "/users/1",
-                         "type": "GET"
-                     },
-                     "patch": {
-                         "href": "/user/1",
-                         "type": "PATCH"
-                     },
-                     "delete": {
-                         "href": "/users/1",
-                         "type": "DELETE"
-                     }
-                 }
-             }
-            """)))
+                            {
+                                 "id": 1,
+                                 "name": "Евгений",
+                                 "email": "mail@mail.com",
+                                 "age": 13,
+                                 "_links": {
+                                     "self": {
+                                         "href": "/users/1",
+                                         "type": "GET"
+                                     },
+                                     "patch": {
+                                         "href": "/user/1",
+                                         "type": "PATCH"
+                                     },
+                                     "delete": {
+                                         "href": "/users/1",
+                                         "type": "DELETE"
+                                     }
+                                 }
+                             }
+                            """)))
     @GetMapping("/users/{id}")
     public ResponseEntity<EntityModel<UserDto>> getUserById(@PathVariable Long id) {
 
@@ -244,27 +244,27 @@ public class UserController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserResponseModel.class),
                     examples = @ExampleObject(value = """
-            {
-                "id": 1,
-                "name": "Евгений",
-                "email": "mail@mail.com",
-                "age": 13,
-                "_links": {
-                    "self": {
-                        "href": "/users/1",
-                        "type": "GET"
-                    },
-                    "patch": {
-                        "href": "/user/1",
-                        "type": "PATCH"
-                    },
-                    "delete": {
-                        "href": "/users/1",
-                        "type": "DELETE"
-                    }
-                }
-            }
-            """)))
+                            {
+                                "id": 1,
+                                "name": "Евгений",
+                                "email": "mail@mail.com",
+                                "age": 13,
+                                "_links": {
+                                    "self": {
+                                        "href": "/users/1",
+                                        "type": "GET"
+                                    },
+                                    "patch": {
+                                        "href": "/user/1",
+                                        "type": "PATCH"
+                                    },
+                                    "delete": {
+                                        "href": "/users/1",
+                                        "type": "DELETE"
+                                    }
+                                }
+                            }
+                            """)))
     @PatchMapping("users/{id}")
     public ResponseEntity<EntityModel<UserDto>> updateUser(
             @PathVariable Long id,
@@ -287,15 +287,15 @@ public class UserController {
     @ApiResponse(
             responseCode = "200",
             description = "Сообщение об успешном удалении пользователя",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = MessageResponseModel.class),
-                            examples = @ExampleObject(
-                                    value = """
-            {
-            "message": "Пользователь успешно удален"
-            }
-            """)))
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MessageResponseModel.class),
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                    "message": "Пользователь успешно удален"
+                                    }
+                                    """)))
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
