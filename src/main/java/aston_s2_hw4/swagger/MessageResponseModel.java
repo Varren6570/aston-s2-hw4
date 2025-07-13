@@ -5,14 +5,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Сообщение-ответ сервера")
 public class MessageResponseModel {
 
-    @Schema(description = "Текстовое сообщение", example = "Пользователь успешно удален")
-    private String message;
+  @Schema(description = "Текстовое сообщение", example = "Пользователь успешно удален")
+  private String message;
 
-    public MessageResponseModel(String message) {
-        this.message = message;
-    }
+  public MessageResponseModel(String message) {
+    this.message = message;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 }

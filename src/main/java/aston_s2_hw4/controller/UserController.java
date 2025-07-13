@@ -1,6 +1,5 @@
 package aston_s2_hw4.controller;
 
-
 import aston_s2_hw4.dto.UserCreateRequest;
 import aston_s2_hw4.dto.UserDto;
 import aston_s2_hw4.service.UserService;
@@ -12,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -27,38 +28,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * REST‑контроллер, предоставляющий CRUD‑API для пользователей.
- * <p>
- * Особенности:
  *
- * <li>Базовый префикс URL — /api</li>
- * <li>Работает только с DTO, не раскрывая сущности</li>
- * <li>Возвращает ResponseEntity, задает HTTP‑статусы</li>
+ * <p>Особенности:
+ * <li>Базовый префикс URL — /api
+ * <li>Работает только с DTO, не раскрывая сущности
+ * <li>Возвращает ResponseEntity, задает HTTP‑статусы
  */
 @RestController
 @RequestMapping("/api/")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  @Autowired
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @Operation(summary = "Получить список всех пользователей")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Список пользователей с HATEOAS-ссылками",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UserListResponseModel.class),
-                    examples = @ExampleObject(
-                            value = """
+  @Operation(summary = "Получить список всех пользователей")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Список пользователей с HATEOAS-ссылками",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = UserListResponseModel.class),
+              examples =
+                  @ExampleObject(
+                      value =
+                          """
                                     {
                                       "_embedded": {
                                         "userDtoList": [
@@ -132,34 +132,40 @@ public class UserController {
                                       }
                                     }
                                     """)))
-    @GetMapping("/users")
-    public ResponseEntity<CollectionModel<EntityModel<UserDto>>> getAllUsers() {
+  @GetMapping("/users")
+  public ResponseEntity<CollectionModel<EntityModel<UserDto>>> getAllUsers() {
 
-        List<UserDto> users = userService.getAllUsers();
+    List<UserDto> users = userService.getAllUsers();
 
-        List<EntityModel<UserDto>> models = users
-                .stream()
-                .map(user -> EntityModel.of(user)
+    List<EntityModel<UserDto>> models =
+        users.stream()
+            .map(
+                user ->
+                    EntityModel.of(user)
                         .add(Link.of("/users/" + user.getId()).withSelfRel().withType("GET"))
                         .add(Link.of("/user/" + user.getId()).withRel("patch").withType("PATCH"))
-                        .add(Link.of("/users/" + user.getId()).withRel("delete").withType("DELETE")))
-                .toList();
+                        .add(
+                            Link.of("/users/" + user.getId()).withRel("delete").withType("DELETE")))
+            .toList();
 
-        CollectionModel<EntityModel<UserDto>> collection = CollectionModel.of(models)
-                .add(Link.of("/users/").withSelfRel().withType("GET"));
+    CollectionModel<EntityModel<UserDto>> collection =
+        CollectionModel.of(models).add(Link.of("/users/").withSelfRel().withType("GET"));
 
-        return new ResponseEntity<>(collection, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(collection, HttpStatus.OK);
+  }
 
-    @Operation(summary = "Создать пользователя")
-    @ApiResponse(
-            responseCode = "201",
-            description = "Пользователь с HATEOAS-ссылками",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UserResponseModel.class),
-                    examples = @ExampleObject(
-                            value = """
+  @Operation(summary = "Создать пользователя")
+  @ApiResponse(
+      responseCode = "201",
+      description = "Пользователь с HATEOAS-ссылками",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = UserResponseModel.class),
+              examples =
+                  @ExampleObject(
+                      value =
+                          """
                                     {
                                       "id": 1,
                                       "name": "Евгений",
@@ -181,31 +187,37 @@ public class UserController {
                                       }
                                     }
                                     """)))
-    @PostMapping("/users")
-    public ResponseEntity<EntityModel<UserDto>> addUser(
-            @RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Пользователь без ID",
-                    required = true, content = @Content(schema = @Schema(implementation = UserCreateRequest.class)))
-            UserCreateRequest userCreateRequest) {
+  @PostMapping("/users")
+  public ResponseEntity<EntityModel<UserDto>> addUser(
+      @RequestBody
+          @io.swagger.v3.oas.annotations.parameters.RequestBody(
+              description = "Пользователь без ID",
+              required = true,
+              content = @Content(schema = @Schema(implementation = UserCreateRequest.class)))
+          UserCreateRequest userCreateRequest) {
 
-        EntityModel<UserDto> model = EntityModel.of(userService.addUser(userCreateRequest));
-        Long id = model.getContent().getId();
-        model
-                .add(Link.of("/users/" + id).withSelfRel().withType("GET"))
-                .add(Link.of("/user/" + id).withRel("patch").withType("PATCH"))
-                .add(Link.of("/users/" + id).withRel("delete").withType("DELETE"));
+    EntityModel<UserDto> model = EntityModel.of(userService.addUser(userCreateRequest));
+    Long id = model.getContent().getId();
+    model
+        .add(Link.of("/users/" + id).withSelfRel().withType("GET"))
+        .add(Link.of("/user/" + id).withRel("patch").withType("PATCH"))
+        .add(Link.of("/users/" + id).withRel("delete").withType("DELETE"));
 
-        return new ResponseEntity<>(model, HttpStatus.CREATED);
-    }
+    return new ResponseEntity<>(model, HttpStatus.CREATED);
+  }
 
-    @Operation(summary = "Получить пользователя по ID")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Пользователь с HATEOAS-ссылками",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserResponseModel.class),
-                    examples = @ExampleObject(value = """
+  @Operation(summary = "Получить пользователя по ID")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Пользователь с HATEOAS-ссылками",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = UserResponseModel.class),
+              examples =
+                  @ExampleObject(
+                      value =
+                          """
                             {
                                  "id": 1,
                                  "name": "Евгений",
@@ -227,23 +239,30 @@ public class UserController {
                                  }
                              }
                             """)))
-    @GetMapping("/users/{id}")
-    public ResponseEntity<EntityModel<UserDto>> getUserById(@PathVariable Long id) {
+  @GetMapping("/users/{id}")
+  public ResponseEntity<EntityModel<UserDto>> getUserById(@PathVariable Long id) {
 
-        EntityModel<UserDto> model = EntityModel.of(userService.getUser(id))
-                .add(Link.of("/users/" + id).withSelfRel().withType("GET"))
-                .add(Link.of("/user/" + id).withRel("patch").withType("PATCH"))
-                .add(Link.of("/users/" + id).withRel("delete").withType("DELETE"));
+    EntityModel<UserDto> model =
+        EntityModel.of(userService.getUser(id))
+            .add(Link.of("/users/" + id).withSelfRel().withType("GET"))
+            .add(Link.of("/user/" + id).withRel("patch").withType("PATCH"))
+            .add(Link.of("/users/" + id).withRel("delete").withType("DELETE"));
 
-        return ResponseEntity.ok().body(model);
-    }
+    return ResponseEntity.ok().body(model);
+  }
 
-    @Operation(summary = "Обновить данные пользователя по ID")
-    @ApiResponse(responseCode = "200",
-            description = "Пользователь с HATEOAS-ссылками",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserResponseModel.class),
-                    examples = @ExampleObject(value = """
+  @Operation(summary = "Обновить данные пользователя по ID")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Пользователь с HATEOAS-ссылками",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = UserResponseModel.class),
+              examples =
+                  @ExampleObject(
+                      value =
+                          """
                             {
                                 "id": 1,
                                 "name": "Евгений",
@@ -265,41 +284,44 @@ public class UserController {
                                 }
                             }
                             """)))
-    @PatchMapping("users/{id}")
-    public ResponseEntity<EntityModel<UserDto>> updateUser(
-            @PathVariable Long id,
-            @RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Пользователь без ID",
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = UserCreateRequest.class)))
-            UserCreateRequest userCreateRequest) {
+  @PatchMapping("users/{id}")
+  public ResponseEntity<EntityModel<UserDto>> updateUser(
+      @PathVariable Long id,
+      @RequestBody
+          @io.swagger.v3.oas.annotations.parameters.RequestBody(
+              description = "Пользователь без ID",
+              required = true,
+              content = @Content(schema = @Schema(implementation = UserCreateRequest.class)))
+          UserCreateRequest userCreateRequest) {
 
-        EntityModel<UserDto> model = EntityModel.of(userService.updateUser(id, userCreateRequest))
-                .add(Link.of("/users/" + id).withSelfRel().withType("GET"))
-                .add(Link.of("/user/" + id).withRel("patch").withType("PATCH"))
-                .add(Link.of("/users/" + id).withRel("delete").withType("DELETE"));
+    EntityModel<UserDto> model =
+        EntityModel.of(userService.updateUser(id, userCreateRequest))
+            .add(Link.of("/users/" + id).withSelfRel().withType("GET"))
+            .add(Link.of("/user/" + id).withRel("patch").withType("PATCH"))
+            .add(Link.of("/users/" + id).withRel("delete").withType("DELETE"));
 
-        return new ResponseEntity<>(model, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(model, HttpStatus.OK);
+  }
 
-    @Operation(summary = "Удалить пользователя по ID")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Сообщение об успешном удалении пользователя",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = MessageResponseModel.class),
-                    examples = @ExampleObject(
-                            value = """
+  @Operation(summary = "Удалить пользователя по ID")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Сообщение об успешном удалении пользователя",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = MessageResponseModel.class),
+              examples =
+                  @ExampleObject(
+                      value =
+                          """
                                     {
                                     "message": "Пользователь успешно удален"
                                     }
                                     """)))
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.ok(Map.of("message", "Пользователь успешно удален"));
-    }
-
+  @DeleteMapping("/users/{id}")
+  public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
+    userService.deleteUser(id);
+    return ResponseEntity.ok(Map.of("message", "Пользователь успешно удален"));
+  }
 }

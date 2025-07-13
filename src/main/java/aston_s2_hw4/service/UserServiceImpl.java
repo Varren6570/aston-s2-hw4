@@ -6,15 +6,14 @@ import aston_s2_hw4.exceptions.UserNotFoundException;
 import aston_s2_hw4.kafka.KafkaSender;
 import aston_s2_hw4.model.User;
 import aston_s2_hw4.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Сервисный слой для работы с пользователями.
