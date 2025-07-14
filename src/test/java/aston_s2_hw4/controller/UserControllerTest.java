@@ -1,9 +1,21 @@
 package aston_s2_hw4.controller;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import aston_s2_hw4.dto.UserCreateRequest;
 import aston_s2_hw4.dto.UserDto;
 import aston_s2_hw4.model.User;
 import aston_s2_hw4.service.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,18 +29,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Тесты для UserController
@@ -125,7 +125,8 @@ class UserControllerTest {
     @Test
     void updateUser_ReturnsStatusOk() throws Exception {
         // Given
-        when(userService.updateUser(1L, userDto)).thenReturn(userDto);
+        UserCreateRequest userCreateRequest = new UserCreateRequest("name", "mail", 12);
+        when(userService.updateUser(1L, userCreateRequest)).thenReturn(userDto);
 
         // When
         ResultActions response = mockMvc.perform(patch("/api/users/1")

@@ -1,6 +1,9 @@
 package aston_s2_hw4;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import aston_s2_hw4.kafka.KafkaSender;
+import java.util.Map;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -21,81 +24,85 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * Конфигурация Kafka‑продюсера.
  *
- * <p>Поднимаем контекст только для работы {@link KafkaSender}.</p>
- * <p>Используем кастомную конфигурацию {@code KafkaProducer} {@link KafkaProducerTestConfig}.</p>
- * <p>Используется тестовый application.yml.</p>
- * <p>Вместо внешней кафки используется embeddedKafka/</p>
- * <p>Топик кафки создается не в {@code KafkaTopic}, а задается в аннотации.</p>
- * <p>Используется вручную созданный consumer</p>
+ * <p>Поднимаем контекст только для работы {@link KafkaSender}.
+ *
+ * <p>Используем кастомную конфигурацию {@code KafkaProducer} {@link KafkaProducerTestConfig}.
+ *
+ * <p>Используется тестовый application.yml.
+ *
+ * <p>Вместо внешней кафки используется embeddedKafka/
+ *
+ * <p>Топик кафки создается не в {@code KafkaTopic}, а задается в аннотации.
+ *
+ * <p>Используется вручную созданный consumer
  */
 @Import(KafkaProducerTestConfig.class)
 @SpringBootTest(classes = {KafkaSender.class})
 @ActiveProfiles("test")
 @DirtiesContext
-@EmbeddedKafka(partitions = 1, topics = {"test-topic"})
+@EmbeddedKafka(
+    partitions = 1,
+    topics = {"test-topic"})
 class SpringBootSenderTest {
 
-    @Autowired
-    EmbeddedKafkaBroker broker;
+  @Autowired EmbeddedKafkaBroker broker;
 
-    @Autowired
-    KafkaSender sender;
+  @Autowired KafkaSender sender;
 
-    Consumer<String, String> consumer;
+  Consumer<String, String> consumer;
 
-    /**
-     * Подготовка к тесту.
-     *
-     * <p>Получаем properties из {@link EmbeddedKafkaBroker}, по ним создаем консьюмера<p/>
-     */
-    @BeforeEach
-    void setUp() {
+  /**
+   * Подготовка к тесту.
+   *
+   * <p>Получаем properties из {@link EmbeddedKafkaBroker}, по ним создаем консьюмера
+   *
+   * <p>
+   */
+  @BeforeEach
+  void setUp() {
 
-        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testGroup", "true", broker);
-        consumerProps.put(
-                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class);
-        consumerProps.put(
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class);
+    Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testGroup", "true", broker);
+    consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        consumer = new DefaultKafkaConsumerFactory<String, String>(consumerProps).createConsumer();
-    }
+    consumer = new DefaultKafkaConsumerFactory<String, String>(consumerProps).createConsumer();
+  }
 
-    @AfterEach
-    void tearDown() {
-        consumer.close();
-    }
+  @AfterEach
+  void tearDown() {
+    consumer.close();
+  }
 
-    /**
-     * Тест.
-     *
-     * <p>Собираем сообщение билдером, отправлеям, вычитываем из консьюмера, сверяем payload, key и topic<p/>
-     */
-    @Test
-    public void givenEmbeddedKafkaBroker_whenSendingWithSimpleProducer_thenMessageReceived() throws Exception {
+  /**
+   * Тест.
+   *
+   * <p>Собираем сообщение билдером, отправлеям, вычитываем из консьюмера, сверяем payload, key и
+   * topic
+   *
+   * <p>
+   */
+  @Test
+  public void givenEmbeddedKafkaBroker_whenSendingWithSimpleProducer_thenMessageReceived()
+      throws Exception {
 
-        Message<String> message = MessageBuilder
-                .withPayload("test@test.com")
-                .setHeader(KafkaHeaders.TOPIC, "test-topic")
-                .setHeader(KafkaHeaders.KEY, "test@test.com")
-                .setHeader("eventType", "TEST_TYPE")
-                .build();
+    Message<String> message =
+        MessageBuilder.withPayload("test@test.com")
+            .setHeader(KafkaHeaders.TOPIC, "test-topic")
+            .setHeader(KafkaHeaders.KEY, "test@test.com")
+            .setHeader("eventType", "TEST_TYPE")
+            .build();
 
-        sender.sendMessage(message);
+    sender.sendMessage(message);
 
-        broker.consumeFromAnEmbeddedTopic(consumer, "test-topic");
-        ConsumerRecord<String, String> record = KafkaTestUtils.getSingleRecord(consumer, "test-topic");  // один полученный рекорд
+    broker.consumeFromAnEmbeddedTopic(consumer, "test-topic");
+    ConsumerRecord<String, String> record =
+        KafkaTestUtils.getSingleRecord(consumer, "test-topic"); // один полученный рекорд
 
-        assertEquals("test@test.com", record.value());
-        assertEquals("test@test.com", record.key());
-        assertEquals("test-topic", record.topic());
-    }
+    assertEquals("test@test.com", record.value());
+    assertEquals("test@test.com", record.key());
+    assertEquals("test-topic", record.topic());
+  }
 }
