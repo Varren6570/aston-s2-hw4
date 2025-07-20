@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: mainapplication
+
+  config:
+    import: 'optional:configserver:'
+
+  cloud:
+    config:
+      profile: dev
+      label: hw7
+      discovery:
+        enabled: true
+        service-id: configserver
+        fail-fast: true
+
+eureka:
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
