@@ -1,0 +1,31 @@
+services:
+
+  # === Config Server ===
+  configserver:
+    build:
+      context: ../ConfigServer
+      dockerfile: Dockerfile
+
+  # === Eureka Discovery Server ===
+  eurekaserver:
+    build:
+      context: ../DiscoveryServerApp
+      dockerfile: Dockerfile
+
+  # === Main Application ===
+  mainapplication:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  # === Test Kafka Consumer ===
+  testconsumer:
+    build:
+      context: ../SpringBootTestConsumer
+      dockerfile: Dockerfile
+
+  # === API Gateway with CircuitBreaker ===
+  gateway:
+    build:
+      context: ../GatewayWithCircuitbreaker2
+      dockerfile: Dockerfile
